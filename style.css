@@ -1,0 +1,51 @@
+body
+{
+	background-color: #eef6ff;
+	font-family: 'Futura';
+	color: #000000;
+	font-weight: 100;
+	font-style: italic;
+	line-height: 1.7;
+	font-size: 16pt;
+	padding: 4rem;
+}
+
+#logo
+{
+	height: 100px;
+	width: 100px;
+}
+
+.org-description
+{
+	display: block;
+	width: 500px;
+	margin-top: 2rem;
+}
+
+.org-description p
+{
+	display: inline;
+	border-bottom: 1px solid #000000;
+}
+
+#contact
+{
+	position: absolute;
+	bottom: 0;
+	text-transform: uppercase;
+	font-weight: 900;
+	font-size: 12pt;
+	margin-bottom: 4rem;
+}
+
+a
+{
+	text-decoration: none;
+	color: #000000;
+}
+
+a:hover
+{
+	border-bottom: 1px solid #000000;
+}
