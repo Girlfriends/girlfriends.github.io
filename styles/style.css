@@ -7,7 +7,15 @@ body
 	font-style: italic;
 	line-height: 1.7;
 	font-size: 16px;
-	padding: 4rem;
+	padding: 1.5rem;
+}
+
+@media (min-width: 400px)
+{
+	body
+	{
+		padding: 4rem;
+	}
 }
 
 ul
@@ -56,27 +64,43 @@ nav
 
 .project:nth-child(even) .title-and-client
 {
-	justify-content: flex-end;
+	align-items: flex-end;
 }
 
 .title-and-client
 {
 	display: flex;
-	flex-direction: row;
+	flex-flow: column;
 	flex: 1 0 0%;
+}
+
+.project-title
+{
+	font-weight: bold;
+	text-transform: uppercase;
 }
 
 .image-and-description
 {
 	display: flex;
-	flex-flow: row nowrap;
+	flex-flow: column;
 	align-items: center;
+}
+
+@media (min-width: 400px)
+{
+	.image-and-description
+	{
+		flex-flow: row nowrap;
+	}
 }
 
 .project-image, .project-description
 {
 	flex: 1 0 0%;
 }
+
+
 
 .project-image img {
 	width: 100%;
