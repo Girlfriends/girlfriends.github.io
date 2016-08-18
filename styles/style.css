@@ -25,12 +25,19 @@ ul
 	padding: 0;
 }
 
+@media (min-width: 400px)
+{
+	.main-header
+	{
+		position: fixed;
+		width: calc(100% - 8rem);
+	}
+}
+
 .main-header
 {
 	display: flex;
 	flex-flow: row nowrap;
-	position: fixed;
-	width: calc(100% - 8rem);
 }
 
 .main-header .logo
@@ -51,11 +58,19 @@ nav
 	font-size: 0.75rem;
 }
 
+@media (min-width: 400px)
+{
+	.projects
+	{
+		margin-top: 12rem;
+	}
+}
+
 .projects
 {
-	margin-top: 12rem;
 	display: flex;
 	flex-flow: column;
+	margin-top: 4rem;
 }
 
 .project
