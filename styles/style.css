@@ -36,7 +36,7 @@ nav
 	font-size: 0.75rem;
 }
 
-.projects
+#projects
 {
 	margin-top: 8rem;
 	display: flex;
@@ -69,7 +69,6 @@ nav
 .image-and-description
 {
 	display: flex;
-	height: 300px;
 	flex-flow: row nowrap;
 	align-items: center;
 }
@@ -78,6 +77,10 @@ nav
 {
 	flex: 1 0 0%;
 }
+
+.project-image img {
+	width: 100%;
+	height: auto; }
 
 #contact
 {
