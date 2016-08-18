@@ -58,19 +58,19 @@ nav
 	font-size: 0.75rem;
 }
 
+.projects
+{
+	display: flex;
+	flex-flow: column;
+	margin-top: 4rem;
+}
+
 @media (min-width: 400px)
 {
 	.projects
 	{
 		margin-top: 12rem;
 	}
-}
-
-.projects
-{
-	display: flex;
-	flex-flow: column;
-	margin-top: 4rem;
 }
 
 .project
