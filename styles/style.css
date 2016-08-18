@@ -10,7 +10,7 @@ body
 	padding: 1.5rem;
 }
 
-@media (min-width: 400px)
+@media (min-width: 415px)
 {
 	body
 	{
@@ -25,7 +25,7 @@ ul
 	padding: 0;
 }
 
-@media (min-width: 400px)
+@media (min-width: 415px)
 {
 	.main-header
 	{
@@ -65,7 +65,7 @@ nav
 	margin-top: 4rem;
 }
 
-@media (min-width: 400px)
+@media (min-width: 415px)
 {
 	.projects
 	{
@@ -121,7 +121,7 @@ nav
 	}
 }
 
-@media (min-width: 400px)
+@media (min-width: 415px)
 {
 	.project:nth-child(even) .project-description
 	{
@@ -165,7 +165,7 @@ nav
 	align-items: center;
 }
 
-@media (min-width: 400px)
+@media (min-width: 415px)
 {
 	.image-and-description
 	{
@@ -194,7 +194,7 @@ nav
 	max-width: 750px;
 }
 
-@media (min-width: 400px)
+@media (min-width: 415px)
 {
 	.about
 	{
@@ -225,7 +225,7 @@ nav
 	margin-top: 4rem;
 }
 
-@media (min-width: 400px)
+@media (min-width: 415px)
 {
 	.contact
 	{
