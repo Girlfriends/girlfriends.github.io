@@ -2,30 +2,30 @@
 
 @font-face {
 	font-family: 'Futura';
-	src: url('FuturaBT-BoldItalic.eot');
-	src: url('FuturaBT-BoldItalic.eot?#iefix') format('embedded-opentype'),
-		url('FuturaBT-BoldItalic.woff') format('woff'),
-		url('FuturaBT-BoldItalic.ttf') format('truetype');
+	src: url('../fonts/FuturaBT-BoldItalic.eot');
+	src: url('../fonts/FuturaBT-BoldItalic.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/FuturaBT-BoldItalic.woff') format('woff'),
+		url('../fonts/FuturaBT-BoldItalic.ttf') format('truetype');
 	font-weight: bold;
 	font-style: italic;
 }
 
 @font-face {
 	font-family: 'Futura';
-	src: url('FuturaBT-Light.eot');
-	src: url('FuturaBT-Light.eot?#iefix') format('embedded-opentype'),
-		url('FuturaBT-Light.woff') format('woff'),
-		url('FuturaBT-Light.ttf') format('truetype');
+	src: url('../fonts/FuturaBT-Light.eot');
+	src: url('../fonts/FuturaBT-Light.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/FuturaBT-Light.woff') format('woff'),
+		url('../fonts/FuturaBT-Light.ttf') format('truetype');
 	font-weight: 300;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: 'Futura';
-	src: url('FuturaBT-LightItalic.eot');
-	src: url('FuturaBT-LightItalic.eot?#iefix') format('embedded-opentype'),
-		url('FuturaBT-LightItalic.woff') format('woff'),
-		url('FuturaBT-LightItalic.ttf') format('truetype');
+	src: url('../fonts/FuturaBT-LightItalic.eot');
+	src: url('../fonts/FuturaBT-LightItalic.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/FuturaBT-LightItalic.woff') format('woff'),
+		url('../fonts/FuturaBT-LightItalic.ttf') format('truetype');
 	font-weight: 300;
 	font-style: italic;
 }
