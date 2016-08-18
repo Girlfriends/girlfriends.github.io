@@ -25,13 +25,13 @@ ul
 	padding: 0;
 }
 
-header
+.main-header
 {
 	display: flex;
 	flex-flow: row nowrap;
 }
 
-header .logo
+.main-header .logo
 {
 	flex: 3 0 0%;
 }
@@ -44,7 +44,7 @@ nav
 	font-size: 0.75rem;
 }
 
-#projects
+.projects
 {
 	margin-top: 8rem;
 	display: flex;
@@ -65,6 +65,19 @@ nav
 .project:nth-child(even) .title-and-client
 {
 	align-items: flex-end;
+}
+
+.project:nth-child(even) .project-description
+{
+	order: 2;
+}
+
+@media (min-width: 400px)
+{
+	.project:nth-child(even) .project-description
+	{
+		order: unset;
+	}
 }
 
 .title-and-client
@@ -102,24 +115,41 @@ nav
 
 
 
-.project-image img {
-	width: 100%;
-	height: auto; }
-
-#contact
+.project-image img
 {
-	position: absolute;
-	bottom: 0;
-	text-transform: uppercase;
-	font-weight: 900;
-	font-size: 12pt;
-	margin-bottom: 4rem;
+	width: 100%;
+	height: auto;
+}
+
+.about
+{
+	/*margin-top: 8rem;*/
+	margin: 8rem;
+}
+
+.about header
+{
+	font-weight: bold;
+	text-align: center;
+}
+
+.social-links
+{
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+.social-links li
+{
+	flex: 1 0 0%;
+	text-align: center;
 }
 
 a
 {
 	text-decoration: none;
 	color: #000000;
+	border-bottom: 1px solid #000000;
 }
 
 a:hover
