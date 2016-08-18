@@ -91,13 +91,13 @@ nav
 
 .project:nth-child(even) .project-description
 {
-	order: 2;
+	order: unset;
 }
 
 @media (min-width: 770px) {
 	.project:nth-child(even) .project-description
 	{
-		order: unset;
+		order: -1;
 		transform: translateX(10%);
 		transition: transform 400ms ease-in-out;
 		margin-right: 1rem;
@@ -125,7 +125,7 @@ nav
 {
 	.project:nth-child(even) .project-description
 	{
-		order: unset;
+		order: -1;
 		margin-right: 1rem;
 	}
 
