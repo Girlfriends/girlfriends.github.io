@@ -10,7 +10,7 @@ body
 	padding: 1.5rem;
 }
 
-@media (min-width: 400px)
+@media (min-width: 415px)
 {
 	body
 	{
@@ -25,7 +25,7 @@ ul
 	padding: 0;
 }
 
-@media (min-width: 400px)
+@media (min-width: 415px)
 {
 	.main-header
 	{
@@ -58,19 +58,19 @@ nav
 	font-size: 0.75rem;
 }
 
-@media (min-width: 400px)
-{
-	.projects
-	{
-		margin-top: 12rem;
-	}
-}
-
 .projects
 {
 	display: flex;
 	flex-flow: column;
 	margin-top: 4rem;
+}
+
+@media (min-width: 415px)
+{
+	.projects
+	{
+		margin-top: 12rem;
+	}
 }
 
 .project
@@ -94,13 +94,13 @@ nav
 	order: 2;
 }
 
-@media (min-width: 400px)
-{
+@media (min-width: 770px) {
 	.project:nth-child(even) .project-description
 	{
 		order: unset;
 		transform: translateX(10%);
 		transition: transform 400ms ease-in-out;
+		margin-right: 1rem;
 	}
 
 	.project:nth-child(even):hover .project-description
@@ -113,6 +113,30 @@ nav
 		transform: translateX(-10%);
 		margin-left: 1rem;
 		transition: transform 400ms ease-in-out;
+	}
+
+	.project:nth-child(odd):hover .project-description
+	{
+		transform: translateX(0%);
+	}
+}
+
+@media (min-width: 415px)
+{
+	.project:nth-child(even) .project-description
+	{
+		order: unset;
+		margin-right: 1rem;
+	}
+
+	.project:nth-child(even):hover .project-description
+	{
+		transform: translateX(0%);
+	}
+
+	.project:nth-child(odd) .project-description
+	{
+		margin-left: 1rem;
 	}
 
 	.project:nth-child(odd):hover .project-description
@@ -147,7 +171,7 @@ nav
 	align-items: center;
 }
 
-@media (min-width: 400px)
+@media (min-width: 415px)
 {
 	.image-and-description
 	{
@@ -176,7 +200,7 @@ nav
 	max-width: 750px;
 }
 
-@media (min-width: 400px)
+@media (min-width: 415px)
 {
 	.about
 	{
@@ -207,7 +231,7 @@ nav
 	margin-top: 4rem;
 }
 
-@media (min-width: 400px)
+@media (min-width: 415px)
 {
 	.contact
 	{
