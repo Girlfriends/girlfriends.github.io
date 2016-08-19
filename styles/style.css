@@ -55,7 +55,13 @@ nav
 	display: flex;
 	justify-content: flex-end;
 	flex: 1 0 0%;
-	font-size: 0.75rem;
+	font-size: 1rem;
+}
+
+@media (min-width: 770px) {
+	nav {
+		font-size: 0.75rem;
+	}
 }
 
 .projects
@@ -185,6 +191,14 @@ nav
 	flex: 1 0 auto;
 }
 
+@media (min-width: 415px)
+{
+	.project-image, .project-description
+	{
+		flex: 1 0 0%;
+	}
+}
+
 
 
 .project-image img
@@ -219,6 +233,15 @@ nav
 {
 	display: flex;
 	flex-flow: row nowrap;
+	font-size: 0.75rem;
+}
+
+@media (min-width: 415px)
+{
+	.social-links
+	{
+		font-size: 1rem;
+	}
 }
 
 .social-links li
