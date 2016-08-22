@@ -107,7 +107,7 @@ nav
 
 .project + .project
 {
-	padding-top: 4rem;
+	padding-top: 8rem;
 }
 
 .project:nth-child(even) .title-and-client
