@@ -1,13 +1,18 @@
 body
 {
-	background-color: #eef6ff;
-	font-family: 'Futura';
+	background-color: #FCE5D5;
+	font-family: 'Alte Haas Grotesk';
 	color: #000000;
 	font-weight: 100;
-	font-style: italic;
 	line-height: 1.7;
-	font-size: 16px;
-	padding: 1.5rem;
+	font-size: 27px;
+	padding: 0;
+}
+
+#canvas {
+	position: absolute;
+	top: -200px;
+	left: -300px;
 }
 
 @media (min-width: 415px)
@@ -32,6 +37,43 @@ ul
 		position: fixed;
 		width: calc(100% - 8rem);
 	}
+}
+
+.border-top, .border-right, .border-bottom, .border-left {
+	display: block;
+	position: fixed;
+	background-color: transparent;
+	z-index: 1000;
+}
+
+.border-top, .border-bottom {
+	height: 20px;
+	width: 100%;
+}
+
+.border-right, .border-left {
+	height: 100%;
+	width: 20px;
+}
+
+.border-top {
+	top: 0;
+	left: 0;
+}
+
+.border-right {
+	right: 0;
+	top: 0;
+}
+
+.border-bottom {
+	bottom: 0;
+	left: 0;
+}
+
+.border-left {
+	left: 0;
+	top: 0;
 }
 
 .main-header
@@ -88,14 +130,14 @@ nav
 	-webkit-flex-flow: column;
 	    -ms-flex-flow: column;
 	        flex-flow: column;
-	margin-top: 4rem;
+	margin: 7rem 5rem;
 }
 
 @media (min-width: 415px)
 {
 	.projects
 	{
-		margin: 12rem 4rem;
+		margin: 7rem 5rem;
 	}
 }
 
@@ -130,36 +172,12 @@ nav
 }
 
 @media (min-width: 770px) {
-	.project:nth-child(even) .project-description
-	{
-		-webkit-order: -1;
-		    -ms-flex-order: -1;
-		        order: -1;
-		-webkit-transform: translateX(10%);
-		    -ms-transform: translateX(10%);
-		        transform: translateX(10%);
-		transition: -webkit-transform 400ms ease-in-out;
-		transition: transform 400ms ease-in-out;
-		transition: transform 400ms ease-in-out, -webkit-transform 400ms ease-in-out;
-		margin-right: 1rem;
-	}
 
 	.project:nth-child(even):hover .project-description
 	{
 		-webkit-transform: translateX(0%);
 		    -ms-transform: translateX(0%);
 		        transform: translateX(0%);
-	}
-
-	.project:nth-child(odd) .project-description
-	{
-		-webkit-transform: translateX(-10%);
-		    -ms-transform: translateX(-10%);
-		        transform: translateX(-10%);
-		margin-left: 1rem;
-		transition: -webkit-transform 400ms ease-in-out;
-		transition: transform 400ms ease-in-out;
-		transition: transform 400ms ease-in-out, -webkit-transform 400ms ease-in-out;
 	}
 
 	.project:nth-child(odd):hover .project-description
@@ -211,11 +229,14 @@ nav
 	-webkit-flex: 1 0 auto;
 	    -ms-flex: 1 0 auto;
 	        flex: 1 0 auto;
-	padding: 1rem 0;
+	padding: 3rem 0;
 }
 
 .project-title, .project-client
 {
+	font-family: 'GT America Expanded';
+	text-transform: uppercase;
+	font-size: 12px;
 	line-height: 1.2;
 	-webkit-flex: 1 0 auto;
 	    -ms-flex: 1 0 auto;
@@ -225,7 +246,12 @@ nav
 .project-title
 {
 	font-weight: bold;
-	text-transform: uppercase;
+    text-transform: uppercase;
+    font-family: 'GT America Expanded';
+    text-decoration: underline;
+    font-size: 27px;
+    letter-spacing: -0.65px;
+    line-height: 45px;
 }
 
 .image-and-description
@@ -233,12 +259,11 @@ nav
 	display: -webkit-flex;
 	display: -ms-flexbox;
 	display: flex;
+	align-items: flex-start;
+
 	-webkit-flex-flow: column;
 	    -ms-flex-flow: column;
 	        flex-flow: column;
-	-webkit-align-items: center;
-	    -ms-flex-align: center;
-	        align-items: center;
 }
 
 @media (min-width: 415px)
@@ -253,9 +278,17 @@ nav
 
 .project-image, .project-description
 {
+	font-size: 16pt;
+	line-height: 27pt;
+	letter-spacing: 0.67px;
+	padding: 20px;
 	-webkit-flex: 1 0 auto;
 	    -ms-flex: 1 0 auto;
 	        flex: 1 0 auto;
+}
+
+.project-description p {
+	margin-top: 0;
 }
 
 @media (min-width: 415px)
