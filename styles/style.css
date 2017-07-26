@@ -11,8 +11,8 @@ body
 
 #canvas {
 	position: absolute;
-	top: -200px;
-	left: -300px;
+	top: -100px;
+	left: -150px;
 }
 
 @media (min-width: 415px)
