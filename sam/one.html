@@ -2,8 +2,35 @@
 <html>
 <head>
 	<title>one</title>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tone/0.10.0/Tone.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="one.css">
 </head>
 <body>
+	<div id="container"></div>
+	<script id="vertexShader" type="x-shader/x-vertex">
+		void main() {
+			gl_Position = vec4(position, 1.0);
+		}
+	</script>
+	<script id="fragmentShader" type="x-shader/x-fragment">
+		uniform vec2 u_resolution;
+		uniform float u_time;
 
+		void main() {
+			float sm = min(u_resolution.x, u_resolution.y);
+			vec2 st = gl_FragCoord.xy/sm;
+			vec2 normDim = u_resolution.xy / sm;
+			st.x += sin(st.y * 20.0 * sin(u_time * 0.1)) * 0.1;
+			st.y += sin(st.x * 19.0 * sin((u_time + 2.0) * 0.11)) * 0.11;
+			float dx = (st.x - normDim.x / 2.0);
+			float dy = (st.y - normDim.y / 2.0);
+			float dist = sqrt(dx * dx + dy * dy);
+			float c = 1.0 - smoothstep(0.245, 0.25, dist);
+			gl_FragColor=vec4(c,c,c,1.0);
+		}
+	</script>
+	<script type="text/javascript" src="./one-audio.js"></script>
+	<script type="text/javascript" src="./one-video.js"></script>
 </body>
 </html>
