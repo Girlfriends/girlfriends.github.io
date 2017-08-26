@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>four</title>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tone/0.10.0/Tone.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="four.css">
+</head>
+<body>
+	<div id="container"></div>
+	<script id="backgroundVertexShader" type="x-shader/x-vertex">
+		void main() {
+			gl_Position = vec4(position, 1.0);
+		}
+	</script>
+	<script id="backgroundFragmentShader" type="x-shader/x-fragment">
+		uniform vec2 u_resolution;
+		uniform float u_time;
+
+		float lines(in vec2 pos, float b, float w){
+			float scale = 10.0;
+			pos *= scale;
+			return smoothstep(0.0, .5+b*.5, abs((sin(pos.x*3.1415 / w)+b*2.0))*.5);
+		}
+
+		float fold(float i, float mx) {
+			float d = mod(i, (mx * 2.0));
+			return mx - abs(mx - d);
+		}
+
+		mat2 rotate2d(float angle){
+			return mat2(cos(angle),-sin(angle), sin(angle),cos(angle));
+		}
+
+		void main() {
+			// Get normalized coordinates
+			float sm = min(u_resolution.x, u_resolution.y);
+			vec2 norm = gl_FragCoord.xy/u_resolution.xy;
+			vec2 snorm = (norm - 0.5) * 2.0;
+			snorm = snorm * u_resolution.xy / sm;
+
+			float oScale = smoothstep(0.0, 1.0, 1.0 - length(snorm));
+			snorm.y += 0.3;
+			float scale = smoothstep(0.0, 1.0, 1.0 - length(snorm));
+			snorm *= scale;
+			float accum = 0.0;
+
+			// Add one offset
+			vec2 offset = snorm;
+			offset.y -= u_time * 0.01;
+			accum += lines(offset.yx, 0.5, 0.5);
+
+			float c = oScale * fold(accum, 1.0);
+
+			gl_FragColor=vec4(c,c,c,1.0);
+		}
+	</script>
+	<script id="foregroundVertexShader" type="x-shader/x-vertex">
+		varying vec2 latlong;
+
+		void main() {
+			float radius = length(position);
+			float theta = atan(position.z, position.x);
+			float phi = acos(position.y / radius);
+			latlong = vec2(theta / 3.14159, phi / 3.14149);
+			gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+		}
+	</script>
+	<script id="foregroundFragmentShader" type="x-shader/x-fragment">
+		uniform vec2 u_resolution;
+		uniform float u_time;
+		varying vec2 latlong;
+
+		float rand(vec2 n) {
+			return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
+		}
+
+		float noise(vec2 p){
+			vec2 ip = floor(p);
+			vec2 u = fract(p);
+			u = u*u*(3.0-2.0*u);
+
+			float res = mix(
+				mix(rand(ip),rand(ip+vec2(1.0,0.0)),u.x),
+				mix(rand(ip+vec2(0.0,1.0)),rand(ip+vec2(1.0,1.0)),u.x),u.y);
+			return res*res;
+		}
+
+		float lines(in vec2 pos, float b, float w){
+			float scale = 10.0;
+			pos *= scale;
+			return smoothstep(0.0, .5+b*.5, abs((sin(pos.x*3.1415 / w)+b*2.0))*.5);
+		}
+
+		float fold(float i, float mx) {
+			float d = mod(i, (mx * 2.0));
+			return mx - abs(mx - d);
+		}
+
+		mat2 rotate2d(float angle){
+			return mat2(cos(angle),-sin(angle), sin(angle),cos(angle));
+		}
+
+		void main() {
+			float accum = 0.0;
+
+			// Add one offset
+			vec2 dd = vec2(u_time, u_time) * 0.001;
+			vec2 rotlong = rotate2d(u_time * 0.036) * latlong;
+			float offset = noise((rotlong + dd) * sin(u_time * 0.0033 + 0.4) * 10.0);
+			vec2 rotpos = rotate2d(offset) * rotlong;
+			accum += lines(abs(rotpos.yx), 0.1, 0.25);
+
+			float c = accum;
+
+			gl_FragColor=vec4( 0.1 * c, c * 0.6, c, 1.0 );
+		}
+	</script>
+	<script type="text/javascript" src="./four-audio.js"></script>
+	<script type="text/javascript" src="./four-video.js"></script>
+</body>
+</html>
