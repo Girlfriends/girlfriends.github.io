@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>five</title>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tone/0.10.0/Tone.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="five.css">
+</head>
+<body>
+	<div id="container"></div>
+	<script id="vertexShader" type="x-shader/x-vertex">
+		void main() {
+			gl_Position = vec4(position, 1.0);
+		}
+	</script>
+	<script id="fragmentShader" type="x-shader/x-fragment">
+		uniform vec2 u_resolution;
+		uniform float u_time;
+
+		float lines(in vec2 pos, float b, float w){
+			float scale = 10.0;
+			pos *= scale;
+			return smoothstep(0.0, .5+b*.5, abs((sin(pos.x*3.1415 / w)+b*2.0))*.5);
+		}
+
+		float fold(float i, float mx) {
+			float d = mod(i, (mx * 2.0));
+			return mx - abs(mx - d);
+		}
+
+		mat2 rotate2d(float angle){
+			return mat2(cos(angle),-sin(angle), sin(angle),cos(angle));
+		}
+
+		void main() {
+			// Get normalized coordinates
+			float sm = min(u_resolution.x, u_resolution.y);
+			vec2 norm = gl_FragCoord.xy/u_resolution.xy;
+			vec2 snorm = (norm - 0.5) * 2.0;
+			snorm = snorm * u_resolution.xy / sm;
+
+			float accum = 0.0;
+
+			// Add one offset
+			vec2 offset = snorm;
+			accum += lines(offset, 0.1, 1.0);
+
+			// Add another offset
+			// offset = snorm;
+			// offset = rotate2d(u_time * 0.03) * offset;
+			// offset.x -= 0.013 * u_time;
+			// accum += lines(offset, 0.1, 1.0);
+
+			// And another offset
+			offset = snorm;
+			offset = rotate2d(-u_time * 0.034) * offset;
+			offset.x += 0.016 * u_time;
+			accum += (cos(u_time * 0.081 + 3.1415 / 4.0) + 1.0) * lines(offset, 0.1, 1.0);
+
+			// And another offset
+			offset = snorm;
+			offset = rotate2d(3.1415 * sin(u_time * 0.0074) + 3.1415 / 2.0) * offset;
+			offset.x += 0.116 * sin(u_time * 0.0074);
+			accum += (cos(-u_time * 0.024 + 3.1415 * 3.0 / 2.0) + 1.0) * lines(offset, 0.1, 1.0);
+
+			// And another offset
+			offset = snorm;
+			// offset = rotate2d(u_time * 0.074) * offset;
+			offset.x += 0.02 * u_time;
+			accum += lines(offset, 0.1, 10.0);
+
+			float c = fold(accum, 1.0);
+
+			gl_FragColor=vec4(c,c,c,1.0);
+		}
+	</script>
+	<script type="text/javascript" src="./five-audio.js"></script>
+	<script type="text/javascript" src="./five-video.js"></script>
+</body>
+</html>

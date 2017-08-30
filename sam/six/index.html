@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>six</title>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tone/0.10.0/Tone.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="six.css">
+</head>
+<body>
+	<div id="container"></div>
+	<script id="backgroundVertexShader" type="x-shader/x-vertex">
+		void main() {
+			gl_Position = vec4(position, 1.0);
+		}
+	</script>
+	<script id="backgroundFragmentShader" type="x-shader/x-fragment">
+		uniform vec2 u_resolution;
+		uniform float u_time;
+
+		float lines(in vec2 pos, float b, float w){
+			float scale = 10.0;
+			pos *= scale;
+			return smoothstep(0.0, .5+b*.5, abs((sin(pos.x*3.1415 / w)+b*2.0))*.5);
+		}
+
+		float fold(float i, float mx) {
+			float d = mod(i, (mx * 2.0));
+			return mx - abs(mx - d);
+		}
+
+		float rand(vec2 n) {
+			return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
+		}
+
+		float noise(vec2 p){
+			vec2 ip = floor(p);
+			vec2 u = fract(p);
+			u = u*u*(3.0-2.0*u);
+
+			float res = mix(
+				mix(rand(ip),rand(ip+vec2(1.0,0.0)),u.x),
+				mix(rand(ip+vec2(0.0,1.0)),rand(ip+vec2(1.0,1.0)),u.x),u.y);
+			return res*res;
+		}
+
+		mat2 rotate2d(float angle){
+			return mat2(cos(angle),-sin(angle), sin(angle),cos(angle));
+		}
+
+		void main() {
+			// Get normalized coordinates
+			float sm = min(u_resolution.x, u_resolution.y);
+			vec2 norm = gl_FragCoord.xy/u_resolution.xy;
+			vec2 snorm = (norm - 0.5) * 2.0;
+			snorm = snorm * u_resolution.xy / sm;
+
+			float d = length(vec2(snorm.x / 3.0, snorm.y / 1.0) - vec2(0.0, 1.0));
+
+			float vig = smoothstep(0.0, 1.0, 1.0 - d);
+
+			float xscaler = pow((smoothstep(0.0, 2.0, 2.0 - abs(snorm.y))), 4.0) * 5.0;
+
+			vec2 scaled = vec2((snorm.x - 3.0) * xscaler, snorm.y);
+
+			scaled += noise(snorm + 0.5 * vec2(u_time*0.02, u_time * 0.02));
+
+			float c = lines(scaled, 0.1, 5.) * vig * 0.2 + 0.1;
+
+			gl_FragColor=vec4(c,c,c,1.0);
+		}
+	</script>
+	<script id="foregroundVertexShader" type="x-shader/x-vertex">
+		varying float z;
+		void main() {
+			gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+			z = gl_Position.z;
+		}
+	</script>
+	<script id="foregroundFragmentShader" type="x-shader/x-fragment">
+		uniform vec2 u_resolution;
+		uniform float u_time;
+		varying float z;
+
+		float rand(vec2 n) {
+			return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
+		}
+
+		float noise(vec2 p){
+			vec2 ip = floor(p);
+			vec2 u = fract(p);
+			u = u*u*(3.0-2.0*u);
+
+			float res = mix(
+				mix(rand(ip),rand(ip+vec2(1.0,0.0)),u.x),
+				mix(rand(ip+vec2(0.0,1.0)),rand(ip+vec2(1.0,1.0)),u.x),u.y);
+			return res*res;
+		}
+
+		float lines(in vec2 pos, float b, float w){
+			float scale = 10.0;
+			pos *= scale;
+			return smoothstep(0.0, .5+b*.5, abs((sin(pos.x*3.1415 / w)+b*2.0))*.5);
+		}
+
+		float fold(float i, float mx) {
+			float d = mod(i, (mx * 2.0));
+			return mx - abs(mx - d);
+		}
+
+		mat2 rotate2d(float angle){
+			return mat2(cos(angle),-sin(angle), sin(angle),cos(angle));
+		}
+
+		void main() {
+			float blueColor = 1.0 - smoothstep(0.0, 25.0, abs(z));
+
+			gl_FragColor=vec4( 0.1, 0.1, blueColor + 0.1, 1.0 );
+		}
+	</script>
+	<script type="text/javascript" src="./six-audio.js"></script>
+	<script type="text/javascript" src="./six-video.js"></script>
+</body>
+</html>
