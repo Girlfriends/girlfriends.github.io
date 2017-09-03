@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>nine</title>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tone/0.10.0/Tone.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../lib/style.css">
+</head>
+<body>
+	<div id="container"></div>
+	<script id="backgroundVertexShader" type="x-shader/x-vertex">
+		void main() {
+			gl_Position = vec4(position, 1.0);
+		}
+	</script>
+	<script id="backgroundFragmentShader" type="x-shader/x-fragment">
+		uniform vec2 u_resolution;
+		uniform float u_time;
+
+		float lines(in vec2 pos, float b, float w){
+			float scale = 10.0;
+			pos *= scale;
+			return smoothstep(0.0, .5+b*.5, abs((sin(pos.x*3.1415 / w)+b*2.0))*.5);
+		}
+
+		float fold(float i, float mx) {
+			float d = mod(i, (mx * 2.0));
+			return mx - abs(mx - d);
+		}
+
+		float rand(vec2 n) {
+			return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
+		}
+
+		float noise(vec2 p){
+			vec2 ip = floor(p);
+			vec2 u = fract(p);
+			u = u*u*(3.0-2.0*u);
+
+			float res = mix(
+				mix(rand(ip),rand(ip+vec2(1.0,0.0)),u.x),
+				mix(rand(ip+vec2(0.0,1.0)),rand(ip+vec2(1.0,1.0)),u.x),u.y);
+			return res*res;
+		}
+
+		mat2 rotate2d(float angle){
+			return mat2(cos(angle),-sin(angle), sin(angle),cos(angle));
+		}
+
+		void main() {
+			// Get normalized coordinates
+			float sm = min(u_resolution.x, u_resolution.y);
+			vec2 norm = gl_FragCoord.xy/u_resolution.xy;
+			vec2 snorm = (norm - 0.5) * 2.0;
+			snorm = snorm * u_resolution.xy / sm;
+
+			float d = length(snorm);
+
+			float c = smoothstep(0.0, 1.5, 1.0 - d);
+
+			gl_FragColor=vec4(c,c,c,1.0);
+		}
+	</script>
+	<script id="foregroundVertexShader" type="x-shader/x-vertex">
+		varying vec2 my_uv;
+		void main() {
+			gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+			my_uv = position.xy;
+		}
+	</script>
+	<script id="foregroundFragmentShader" type="x-shader/x-fragment">
+		uniform vec2 u_resolution;
+		uniform float u_time;
+		varying vec2 my_uv;
+
+		float rand(vec2 n) {
+			return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
+		}
+
+		float noise(vec2 p){
+			vec2 ip = floor(p);
+			vec2 u = fract(p);
+			u = u*u*(3.0-2.0*u);
+
+			float res = mix(
+				mix(rand(ip),rand(ip+vec2(1.0,0.0)),u.x),
+				mix(rand(ip+vec2(0.0,1.0)),rand(ip+vec2(1.0,1.0)),u.x),u.y);
+			return res*res;
+		}
+
+		float lines(in vec2 pos, float b, float w){
+			float scale = 10.0;
+			pos *= scale;
+			return smoothstep(0.0, .5+b*.5, abs((sin(pos.x*3.1415 / w)+b*2.0))*.5);
+		}
+
+		float fold(float i, float mx) {
+			float d = mod(i, (mx * 2.0));
+			return mx - abs(mx - d);
+		}
+
+		mat2 rotate2d(float angle){
+			return mat2(cos(angle),-sin(angle), sin(angle),cos(angle));
+		}
+
+		void main() {
+			float d = sin(my_uv.x * 10.0 + u_time) * 1.0 * cos(my_uv.y * 1.4 + u_time + 1.0) + 0.2;
+
+			gl_FragColor=vec4( d, 0.0, d, d );
+		}
+	</script>
+	<script id="reverbVertexShader" type="x-shader/x-vertex">
+		void main() {
+			gl_Position = vec4(position, 1.0);
+		}
+	</script>
+	<script id="reverbFragmentShader" type="x-shader/x-fragment">
+		uniform vec2 u_resolution;
+		uniform float u_time;
+		uniform sampler2D u_texture_1;
+		uniform sampler2D u_texture_2;
+
+		float rand(vec2 n) {
+			return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
+		}
+
+		float noise(vec2 p){
+			vec2 ip = floor(p);
+			vec2 u = fract(p);
+			u = u*u*(3.0-2.0*u);
+
+			float res = mix(
+				mix(rand(ip),rand(ip+vec2(1.0,0.0)),u.x),
+				mix(rand(ip+vec2(0.0,1.0)),rand(ip+vec2(1.0,1.0)),u.x),u.y);
+			return res*res;
+		}
+
+		float lines(in vec2 pos, float b, float w){
+			float scale = 10.0;
+			pos *= scale;
+			return smoothstep(0.0, .5+b*.5, abs((sin(pos.x*3.1415 / w)+b*2.0))*.5);
+		}
+
+		float fold(float i, float mx) {
+			float d = mod(i, (mx * 2.0));
+			return mx - abs(mx - d);
+		}
+
+		mat2 rotate2d(float angle){
+			return mat2(cos(angle),-sin(angle), sin(angle),cos(angle));
+		}
+
+		void main() {
+			float sm = min(u_resolution.x, u_resolution.y);
+			vec2 norm = gl_FragCoord.xy/u_resolution.xy;
+			vec2 snorm = (norm - 0.5) * 2.0;
+			snorm = snorm * u_resolution.xy / sm;
+
+			snorm /= 1.1;
+
+			vec2 newPos = norm + 0.03 * vec2(cos(u_time * 0.4), sin(u_time * 0.4));
+			// newPos += 0.4 * noise(norm * sin(u_time));
+			vec4 old = texture2D(u_texture_2, newPos);
+			old += texture2D(u_texture_2, vec2( 1.0 - newPos.x, newPos.y));
+			old.a *= 0.48;
+			old.r *= 0.5;
+			old.b *= 0.9;
+
+			gl_FragColor = texture2D(u_texture_1, norm) + old;
+		}
+	</script>
+	<script type="text/javascript" src="./nine-audio.js"></script>
+	<script type="text/javascript" src="./nine-video.js"></script>
+</body>
+</html>
