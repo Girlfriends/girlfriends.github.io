@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>eleven</title>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tone/0.10.0/Tone.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
+	<script type="text/javascript" src="https://abberg.github.io/lib/shaders/CopyShader.js"></script>
+	<script type="text/javascript" src="https://abberg.github.io/lib/postprocessing/EffectComposer.js"></script>
+	<script type="text/javascript" src="https://abberg.github.io/lib/postprocessing/RenderPass.js"></script>
+	<script type="text/javascript" src="https://abberg.github.io/lib/postprocessing/ShaderPass.js"></script>
+	<link rel="stylesheet" type="text/css" href="../lib/style.css">
+</head>
+<body>
+	<div id="container"></div>
+	<script id="standardVertexShader" type="x-shader/x-vertex">
+		varying vec2 vUv;
+		void main() {
+			vUv = uv;
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+		}
+	</script>
+	<script id="blurFragmentShader" type="x-shader/x-fragment">
+		varying vec2 vUv;
+		uniform sampler2D tDiffuse;
+		uniform float radius;
+		uniform float u_time;
+		uniform vec2 dir;
+		void main()
+		{
+			vec2 texCoord = vUv;
+			vec2 deltaTextCoord = vec2(0.05, 0.0);
+			vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
+			float blur = 0.008 * sin(vUv.x * 5.0 + u_time);
+			float hstep = dir.x;
+			float vstep = dir.y;
+			//apply blurring, using a 9-tap filter with predefined gaussian weights
+			color += texture2D(tDiffuse, vec2(texCoord.x - 4.0*blur*hstep, texCoord.y - 4.0*blur*vstep)) * 0.0162162162;
+			color += texture2D(tDiffuse, vec2(texCoord.x - 3.0*blur*hstep, texCoord.y - 3.0*blur*vstep)) * 0.0540540541;
+			color += texture2D(tDiffuse, vec2(texCoord.x - 2.0*blur*hstep, texCoord.y - 2.0*blur*vstep)) * 0.1216216216;
+			color += texture2D(tDiffuse, vec2(texCoord.x - 1.0*blur*hstep, texCoord.y - 1.0*blur*vstep)) * 0.1945945946;
+			color += texture2D(tDiffuse, vec2(texCoord.x, texCoord.y)) * 0.2270270270;
+			color += texture2D(tDiffuse, vec2(texCoord.x + 1.0*blur*hstep, texCoord.y + 1.0*blur*vstep)) * 0.1945945946;
+			color += texture2D(tDiffuse, vec2(texCoord.x + 2.0*blur*hstep, texCoord.y + 2.0*blur*vstep)) * 0.1216216216;
+			color += texture2D(tDiffuse, vec2(texCoord.x + 3.0*blur*hstep, texCoord.y + 3.0*blur*vstep)) * 0.0540540541;
+			color += texture2D(tDiffuse, vec2(texCoord.x + 4.0*blur*hstep, texCoord.y + 4.0*blur*vstep)) * 0.0162162162;
+			gl_FragColor = color;
+		}
+	</script>
+	<script id="radialBlurFragmentShader" type="x-shader/x-fragment">
+		varying vec2 vUv;
+		uniform sampler2D tDiffuse;
+		uniform vec2 lightPosition;
+		uniform float exposure;
+		uniform float decay;
+		uniform float density;
+		uniform float weight;
+		uniform int samples;
+		uniform float u_time;
+		uniform vec3 start_tint;
+		uniform vec3 end_tint;
+		const int MAX_SAMPLES = 100;
+		void main() {
+			vec2 texCoord = vUv;
+			float mDensity = density;
+			// mDensity *= 2.0 * abs(cos(angle + u_time / 5.0));
+			// deltaTexCoord *= abs(0.5 * sin(angle * 3.0 + u_time * -0.05));
+			vec4 color = texture2D(tDiffuse, texCoord);
+			int iterations = 3;
+			float isc = float(iterations) - 1.0;
+			for (int j=0; j<4; j++) {
+				if (j == iterations) break;
+				float illuminationDecay = 1.0;
+				texCoord = vUv;
+				vec2 mLightPosition = lightPosition;
+				vec4 mTint = vec4(start_tint[0], start_tint[1], start_tint[2], 1) * (isc-float(j)) / isc;
+				mTint += vec4(end_tint[0], end_tint[1], end_tint[2], 1) * float(j) / isc;
+				mLightPosition += 0.95 * vec2(cos(u_time / 2.0 + float(j) * 1.0) / 20.0, sin(u_time / 2.0 + float(j) * 1.0) / 26.8 );
+				vec2 deltaTexCoord = texCoord - mLightPosition;
+				deltaTexCoord *= 1.0 / float(samples) * mDensity;
+				for (int i=0; i<MAX_SAMPLES; i++) {
+					if (i == samples) { break; }
+					texCoord -= deltaTexCoord;
+					vec4 sample = texture2D(tDiffuse, texCoord);
+					sample *= illuminationDecay * weight;
+					color += (sample * mTint);
+					illuminationDecay *= decay;
+				}
+			}
+			gl_FragColor = color * exposure;
+		}
+	</script>
+	<script id="additiveFragmentShader" type="x-shader/x-fragment">
+		uniform sampler2D tDiffuse;
+		uniform sampler2D tAdd;
+		varying vec2 vUv;
+		void main() {
+			vec4 color = texture2D( tDiffuse, vUv );
+			vec4 add = texture2D( tAdd, vUv );
+			gl_FragColor = color + add;
+		}
+	</script>
+	<script type="text/javascript" src="./eleven-audio.js"></script>
+	<script type="text/javascript" src="./eleven-video.js"></script>
+</body>
+</html>
