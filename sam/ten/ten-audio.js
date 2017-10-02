@@ -60,7 +60,7 @@ steadyPattern.start("1n");
 var steadyPattern2 = new Tone.Pattern(function(time, note){
   //the order of the notes passed in depends on the pattern
   psynth2.triggerAttackRelease(note, 1.5, time);
-}, ["E3", "B2", "G#2", "A2", "B2", "A2", "G#2"], "up");
+}, ["E4", "B2", "G#2", "A2", "B2", "A2", "G#2"], "up");
 steadyPattern2.interval = 1.5;
 steadyPattern2.start("1n");
 

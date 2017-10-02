@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>twelve</title>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tone/0.10.0/Tone.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.5/dat.gui.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
+	<script type="text/javascript" src="https://abberg.github.io/lib/shaders/CopyShader.js"></script>
+	<script type="text/javascript" src="https://abberg.github.io/lib/postprocessing/EffectComposer.js"></script>
+	<script type="text/javascript" src="https://abberg.github.io/lib/postprocessing/RenderPass.js"></script>
+	<script type="text/javascript" src="https://abberg.github.io/lib/postprocessing/ShaderPass.js"></script>
+	<link rel="stylesheet" type="text/css" href="../lib/style.css">
+</head>
+<body>
+	<div id="container"></div>
+	<script id="vertexShader" type="x-shader/x-vertex">
+		uniform float u_var_x;
+		varying float v_dist;
+		varying float v_theta;
+		varying vec3 v_pos;
+		void main() {
+			vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+			v_pos = modelPosition.xyz;
+			float theta = modelPosition.x;
+			v_theta = theta;
+			float radius = modelPosition.z * 3.75;
+			modelPosition.x = sin(theta) * cos(modelPosition.y) * radius;
+			modelPosition.z = cos(theta) * cos(modelPosition.y) * radius;
+			modelPosition.y = sin(modelPosition.y) * radius;
+			v_dist = length(modelPosition.xyz);
+			gl_Position = projectionMatrix * viewMatrix * modelPosition;
+		}
+	</script>
+	<script id="fragmentShader" type="x-shader/x-fragment">
+		uniform vec2 u_resolution;
+		uniform float u_angle;
+		uniform float u_time;
+		varying float v_dist;
+		varying float v_theta;
+		varying vec3 v_pos;
+
+		float line(vec2 st, float slope, float intercept, float width) {
+			float y = st.x * slope + intercept;
+			float dy = st.y - y;
+			float w = max(width, 0.001);
+			return smoothstep(-w, 0.0, dy) - smoothstep(0.0, w, dy);
+		}
+
+		void main() {
+			float sm = min(u_resolution.x, u_resolution.y);
+			vec2 st = gl_FragCoord.xy / sm;
+			st -= vec2(0.5, 0.5);
+			float accum = line(sin(v_pos.xy), tan(u_time * 0.2 + v_dist * 2.0), 0.0, 0.02);
+			// accum += line(sin(v_pos.xy), tan(u_time * -0.27 + v_dist * 6.0), 0.0, 0.02);
+			float v = (sin(v_dist + u_time/2.0) + 1.0) / 6.0;
+			// gl_FragColor = vec4((sin(v_dist + u_time/2.0) + 1.0)/2.0, accum * 0.4, accum * 0.2, 1.0);
+			// gl_FragColor = vec4(
+			// 	accum, 0.0, accum * v * sin(u_time / 11.0) * 0.7, 1.0);
+			gl_FragColor = vec4(sin(v_pos.z * 10.0 + u_time * 0.5), 0.0, 0.0, 1.0);
+		}
+	</script>
+	<script type="text/javascript" src="./twelve-audio.js"></script>
+	<script type="text/javascript" src="./twelve-video.js"></script>
+</body>
+</html>
